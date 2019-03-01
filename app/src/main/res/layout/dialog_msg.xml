@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/txt_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="132dp"
+        android:text="..."
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/btn_person"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_whts"
+        style="@style/style_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="11dp"
+        android:layout_marginStart="3dp"
+        android:onClick="btn_whts"
+        android:text="WhatsApp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/btn_twt"
+        app:layout_constraintEnd_toStartOf="@+id/btn_twt"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_twt"
+        style="@style/style_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="164dp"
+        android:layout_marginEnd="8dp"
+        android:onClick="btn_twt"
+        android:text="Twitter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_person"
+        app:layout_constraintStart_toEndOf="@+id/btn_whts" />
+
+    <Button
+        android:id="@+id/btn_person"
+        style="@style/style_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="btn_person"
+        android:text="Person"
+        app:layout_constraintBaseline_toBaselineOf="@+id/btn_twt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_twt" />
+</android.support.constraint.ConstraintLayout>
