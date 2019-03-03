@@ -23,7 +23,8 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="58" />
+                                                <entry key="scalingPercent" value="90" />
+                                                <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,10 +34,12 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="backgroundLayerName" value="ic_bacground_whereiicon" />
-                                      <entry key="foregroundImage" value="$USER_HOME$/Desktop/whereIicons.png" />
-                                      <entry key="foregroundLayerName" value="ic_foreground_whereiicon" />
-                                      <entry key="outputName" value="ic_icon" />
+                                      <entry key="backgroundAssetType" value="COLOR" />
+                                      <entry key="backgroundColor" value="f60c25" />
+                                      <entry key="backgroundLayerName" value="ic_bacground_warning" />
+                                      <entry key="foregroundImage" value="$USER_HOME$/Desktop/whereIicons.jpg" />
+                                      <entry key="foregroundLayerName" value="ic_foreground_warning" />
+                                      <entry key="outputName" value="ic_warning" />
                                     </map>
                                   </option>
                                 </PersistentState>

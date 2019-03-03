@@ -20,4 +20,16 @@
         <item name="android:padding">10dip</item>
         <item name="android:typeface">monospace</item>
     </style>
+
+    <style name="style_text" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">center</item>
+        <item name="android:shadowColor">@color/white</item>
+        <item name="android:shadowRadius">0.10</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:padding">10dip</item>
+        <item name="android:typeface">monospace</item>
+    </style>
 </resources>
