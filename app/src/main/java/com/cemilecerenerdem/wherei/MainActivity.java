@@ -128,120 +128,127 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public void ShareMeLocation(View v) {
 
         if (isInternet() == true) {
-            Dialog dialog = new Dialog(this);
-            dialog.setContentView(R.layout.dialog_msg);
-            dialog.setTitle(getString(R.string.dialog_msgTitle));
+            if (userLocation.latitude != 0 || userLocation.longitude != 0) {
+                Dialog dialog = new Dialog(this);
+                dialog.setContentView(R.layout.dialog_msg);
+                dialog.setTitle(getString(R.string.dialog_msgTitle));
 
-            TextView info = (TextView) dialog.findViewById(R.id.txt_view);
+                TextView info = (TextView) dialog.findViewById(R.id.txt_view);
 
-            if (userLocation.latitude != 0 && userLocation.longitude != 0) {
+                if (userLocation.latitude != 0 && userLocation.longitude != 0) {
 
-                //TODO: 2- Dialog Alert içerisinde google dan alınan konum bilgisi mahalle sokak kapı no olarak yazdırılacak.
-                final String location = "Latidude: " + userLocation.latitude + " - Longitude: " + userLocation.longitude;
-                info.setText(location);
+                    //TODO: 2- Dialog Alert içerisinde google dan alınan konum bilgisi mahalle sokak kapı no olarak yazdırılacak.
+                    final String location = "Latidude: " + userLocation.latitude + " - Longitude: " + userLocation.longitude;
+                    info.setText(location);
 
-                Button whatsApp = (Button) dialog.findViewById(R.id.btn_whts);
-                Button twitter = (Button) dialog.findViewById(R.id.btn_twt);
-                Button contact = (Button) dialog.findViewById(R.id.btn_contact);
+                    Button whatsApp = (Button) dialog.findViewById(R.id.btn_whts);
+                    Button twitter = (Button) dialog.findViewById(R.id.btn_twt);
+                    Button contact = (Button) dialog.findViewById(R.id.btn_contact);
 
-                //WhatsApp
-                whatsApp.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                    //WhatsApp
+                    whatsApp.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
-                        //TODO 19- WhatsApp olan android telefonda test edilecek.
-                        if (isInternet() == true) {
-                            //TODO: 6- WhatsApp kişi listesi açılacak.
-                        } else {
-                            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
-                            alertBuilder.setView(R.layout.dialog_warning);
-                            alertBuilder.setCancelable(false);
-                            alertBuilder.setPositiveButton(R.string.dialog_PositiveButton_OpenInternet, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    onActivityResult(1, 1, null);
-                                }
-                            });
-                            alertBuilder.setNegativeButton(R.string.dialog_NegativeButton_CloseApp, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    onActivityResult(0, 0, null);
-                                }
-                            });
+                            //TODO 19- WhatsApp olan android telefonda test edilecek.
+                            if (isInternet() == true) {
+                                //TODO: 6- WhatsApp kişi listesi açılacak.
+                            } else {
+                                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+                                alertBuilder.setView(R.layout.dialog_warning);
+                                alertBuilder.setCancelable(false);
+                                alertBuilder.setPositiveButton(R.string.dialog_PositiveButton_OpenInternet, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        onActivityResult(1, 1, null);
+                                    }
+                                });
+                                alertBuilder.setNegativeButton(R.string.dialog_NegativeButton_CloseApp, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        onActivityResult(0, 0, null);
+                                    }
+                                });
 
-                            alertBuilder.create().show();
+                                alertBuilder.create().show();
+                            }
                         }
-                    }
-                });
+                    });
 
-                //Twitter
-                twitter.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (isInternet() == true) {
-                            //TODO: 15- Twitterda paylaş yapılacak.
-                            //TODO: 18- Twittera giriş yapılarak test edilecek.
-                        } else {
-                            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
-                            alertBuilder.setView(R.layout.dialog_warning);
-                            alertBuilder.setCancelable(false);
-                            alertBuilder.setPositiveButton(R.string.dialog_PositiveButton_OpenInternet, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    onActivityResult(1, 1, null);
-                                }
-                            });
-                            alertBuilder.setNegativeButton(R.string.dialog_NegativeButton_CloseApp, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    onActivityResult(0, 0, null);
-                                }
-                            });
+                    //Twitter
+                    twitter.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (isInternet() == true) {
+                                //TODO: 15- Twitterda paylaş yapılacak.
+                                //TODO: 18- Twittera giriş yapılarak test edilecek.
+                            } else {
+                                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+                                alertBuilder.setView(R.layout.dialog_warning);
+                                alertBuilder.setCancelable(false);
+                                alertBuilder.setPositiveButton(R.string.dialog_PositiveButton_OpenInternet, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        onActivityResult(1, 1, null);
+                                    }
+                                });
+                                alertBuilder.setNegativeButton(R.string.dialog_NegativeButton_CloseApp, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        onActivityResult(0, 0, null);
+                                    }
+                                });
 
-                            alertBuilder.create().show();
+                                alertBuilder.create().show();
+                            }
                         }
-                    }
-                });
+                    });
 
-                //Contact Guide
-                contact.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //TODO: 16- Mesaj gönderilerek test edilecek.
-                        //TODO: 17- Kişi listesi gelecek. Seçilen kişiye direk gönderim yapılacak.
-                        if (isInternet() == true) {
-                            Intent sendIntent = new Intent();
-                            sendIntent.setAction(Intent.ACTION_SEND);
-                            sendIntent.putExtra(Intent.EXTRA_TEXT, "My location is " + location);
-                            sendIntent.setType("text/plain");
-                            startActivity(sendIntent);
-                            //TODO: 19- Mesaj gönderimi başarılı ise mesaj göster.
-                        } else {
-                            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
-                            alertBuilder.setView(R.layout.dialog_warning);
-                            alertBuilder.setCancelable(false);
-                            alertBuilder.setPositiveButton(R.string.dialog_PositiveButton_OpenInternet, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    onActivityResult(1, 1, null);
-                                }
-                            });
-                            alertBuilder.setNegativeButton(R.string.dialog_NegativeButton_CloseApp, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    onActivityResult(0, 0, null);
-                                }
-                            });
+                    //Contact Guide
+                    contact.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //TODO: 16- Mesaj gönderilerek test edilecek.
+                            //TODO: 17- Kişi listesi gelecek. Seçilen kişiye direk gönderim yapılacak.
+                            if (isInternet() == true) {
+                                Intent sendIntent = new Intent();
+                                sendIntent.setAction(Intent.ACTION_SEND);
+                                sendIntent.putExtra(Intent.EXTRA_TEXT, "My location is " + location);
+                                sendIntent.setType("text/plain");
+                                startActivity(sendIntent);
+                                //TODO: 19- Mesaj gönderimi başarılı ise mesaj göster.
+                            } else {
+                                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+                                alertBuilder.setView(R.layout.dialog_warning);
+                                alertBuilder.setCancelable(false);
+                                alertBuilder.setPositiveButton(R.string.dialog_PositiveButton_OpenInternet, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        onActivityResult(1, 1, null);
+                                    }
+                                });
+                                alertBuilder.setNegativeButton(R.string.dialog_NegativeButton_CloseApp, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        onActivityResult(0, 0, null);
+                                    }
+                                });
 
-                            alertBuilder.create().show();
+                                alertBuilder.create().show();
+                            }
                         }
-                    }
-                });
+                    });
 
+                } else {
+                    info.setText(getString(R.string.text_YourLocationNotFound));
+                }
+                dialog.show();
             } else {
-                info.setText(getString(R.string.text_YourLocationNotFound));
+                Dialog dialog = new Dialog(this);
+                dialog.setContentView(R.layout.dialog_warning);
+                dialog.setTitle(getString(R.string.text_YourLocationNotFound));
+                dialog.show();
             }
-            dialog.show();
         } else {
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
             alertBuilder.setView(R.layout.dialog_warning);
