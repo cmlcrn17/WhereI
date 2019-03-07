@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,12 +18,9 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,6 +28,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -137,9 +140,33 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
                 if (userLocation.latitude != 0 && userLocation.longitude != 0) {
 
-                    //TODO: 2- Dialog Alert içerisinde google dan alınan konum bilgisi mahalle sokak kapı no olarak yazdırılacak.
-                    final String location = "Latidude: " + userLocation.latitude + " - Longitude: " + userLocation.longitude;
-                    info.setText(location);
+                    //TODO: 20 - Mahalle, Sokak, Kapı no bilgisi düzgün şekilde yazdırılacak.
+                    //Test Location -> 40.718732, 29.794408
+                    Geocoder geocoder;
+                    List<Address> addresses = null;
+                    geocoder = new Geocoder(this, Locale.getDefault());
+
+                    //Double latitude = Double.parseDouble("40.718732");
+                    //Double longitude = Double.parseDouble("29.794408");
+
+                    try {
+                        addresses = geocoder.getFromLocation(userLocation.latitude, userLocation.longitude, 1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    final String address = addresses.get(0).getAddressLine(0);
+                    String city = addresses.get(0).getLocality();
+                    String state = addresses.get(0).getAdminArea();
+                    String country = addresses.get(0).getCountryName();
+                    String postalCode = addresses.get(0).getPostalCode();
+                    String knownName = addresses.get(0).getFeatureName();
+
+                    //Write Lat, Long
+                    //final String location = "Latidude: " + userLocation.latitude + " - Longitude: " + userLocation.longitude;
+                    //info.setText(location);
+
+                    info.setText(address.toString());
 
                     Button whatsApp = (Button) dialog.findViewById(R.id.btn_whts);
                     Button twitter = (Button) dialog.findViewById(R.id.btn_twt);
@@ -213,7 +240,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                             if (isInternet() == true) {
                                 Intent sendIntent = new Intent();
                                 sendIntent.setAction(Intent.ACTION_SEND);
-                                sendIntent.putExtra(Intent.EXTRA_TEXT, "My location is " + location);
+                                sendIntent.putExtra(Intent.EXTRA_TEXT, "My location is " + address.toString());
                                 sendIntent.setType("text/plain");
                                 startActivity(sendIntent);
                                 //TODO: 19- Mesaj gönderimi başarılı ise mesaj göster.
