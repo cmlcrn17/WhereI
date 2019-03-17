@@ -1,11 +1,13 @@
 <resources>
-    <string name="app_name">Where am I?</string>
-    <string name="title_activity_maps">Where am I?</string>
-    <string name="mapIcons_text">You are here!</string>
-    <string name="dialog_msgTitle">Where am I?</string>
+    <string name="app_name">Ben Neredeyim?</string>
+    <string name="title_activity_maps">Ben Neredeyim?</string>
+    <string name="mapIcons_text">Sen Buradasın!</string>
+    <string name="dialog_msgTitle">Ben Neredeyim?</string>
     <string name="dialog_warningTitle">Internet!</string>
-    <string name="dialog_warningMsg">Your have not Internet!</string>
-    <string name="dialog_PositiveButton_OpenInternet">Open Internet</string>
-    <string name="dialog_NegativeButton_CloseApp">Close App</string>
-    <string name="text_YourLocationNotFound">Your location not found.</string>
+    <string name="dialog_warningMsg">Internet bağlantınız yok!</string>
+    <string name="dialog_PositiveButton_OpenInternet">Internet bağlantınızı açınız.</string>
+    <string name="dialog_NegativeButton_CloseApp">Uygulamayı kapat.</string>
+    <string name="text_YourLocationNotFound">Lokasyon bilginiz bulunamadı.</string>
+    <string name="btn_message">Mesaj</string>
+    <string name="btn_whereamI">Neredeyim?</string>
 </resources>

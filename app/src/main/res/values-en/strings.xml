@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Where am I?</string>
+    <string name="title_activity_maps">Where am I?</string>
+    <string name="mapIcons_text">You are here!</string>
+    <string name="dialog_msgTitle">Where am I?</string>
+    <string name="dialog_warningTitle">Internet!</string>
+    <string name="dialog_warningMsg">Your have not Internet!</string>
+    <string name="dialog_PositiveButton_OpenInternet">Open Internet</string>
+    <string name="dialog_NegativeButton_CloseApp">Close App</string>
+    <string name="text_YourLocationNotFound">Your location not found.</string>
+    <string name="btn_message">Message</string>
+    <string name="btn_whereamI">Where am I?</string>
+</resources>

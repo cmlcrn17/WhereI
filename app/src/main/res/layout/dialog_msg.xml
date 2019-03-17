@@ -54,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="btn_contact"
-        android:text="Message"
+        android:text="@string/btn_message"
         app:layout_constraintBaseline_toBaselineOf="@+id/btn_twt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_twt" />
