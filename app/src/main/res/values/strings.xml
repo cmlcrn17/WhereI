@@ -10,4 +10,8 @@
     <string name="text_YourLocationNotFound">Lokasyon bilginiz bulunamadı.</string>
     <string name="btn_message">Mesaj</string>
     <string name="btn_whereamI">Neredeyim?</string>
+    <string name="info_wifistatetrue">Internet bağlantısı sağlandı.</string>
+    <string name="info_wifistatefalse">Internet bağlantısı sağlanamadı.</string>
+
+
 </resources>
