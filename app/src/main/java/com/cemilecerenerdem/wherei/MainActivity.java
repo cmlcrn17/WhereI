@@ -4,9 +4,11 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Address;
@@ -15,18 +17,15 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.telephony.ServiceState;
-import android.telephony.TelephonyManager;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,6 +33,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthToken;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.io.IOException;
 import java.util.List;
@@ -46,12 +53,15 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     public static LocationManager locationManager;
     public static LocationListener locationListener;
+    private WifiManager wifiManager;
     LatLng userLocation;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Twitter.initialize(this);
         setContentView(R.layout.activity_main);
 
         String isLang = Locale.getDefault().getLanguage();
@@ -63,6 +73,27 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
         Boolean isInternet = isInternet();
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        TwitterLoginButton btnTwt = (TwitterLoginButton) findViewById(R.id.btn_twt);
+
+
+        Callback twitterCallback = new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+                TwitterAuthToken authToken = session.getAuthToken();
+                String token = authToken.token;
+                String secret = authToken.secret;
+
+                login(session);
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+
+            }
+        };
+        //btnTwt.setCallback(twitterCallback);
 
         if (isInternet == true) {
             mapFragment.getMapAsync(this);
@@ -128,7 +159,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             //TODO: 4- İzin verdikten sonra tekrar uygulamayı açmam gerekiyor. Bu kod akışı araştırılacak.
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
             } else {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 0, locationListener);
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60000, 1000, locationListener);
@@ -220,7 +250,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         public void onClick(View view) {
                             if (isInternet() == true) {
                                 //TODO: 15- Twitterda paylaş yapılacak.
-                                //TODO: 18- Twittera giriş yapılarak test edilecek.
                             } else {
                                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
                                 alertBuilder.setView(R.layout.dialog_warning);
@@ -247,15 +276,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     contact.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            //TODO: 16- Mesaj gönderilerek test edilecek.
-                            //TODO: 17- Kişi listesi gelecek. Seçilen kişiye direk gönderim yapılacak.
+                            //TODO: TEST - Mesaj gönderilerek test edilecek.
                             if (isInternet() == true) {
                                 Intent sendIntent = new Intent();
                                 sendIntent.setAction(Intent.ACTION_SEND);
                                 sendIntent.putExtra(Intent.EXTRA_TEXT, "My location is " + address.toString());
                                 sendIntent.setType("text/plain");
                                 startActivity(sendIntent);
-                                //TODO: 19- Mesaj gönderimi başarılı ise mesaj göster.
                             } else {
                                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
                                 alertBuilder.setView(R.layout.dialog_warning);
@@ -328,38 +355,45 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         // requestCode, resultCode 1: Open Internet
 
         if (requestCode == 1) { //Open Internet
+
+            Intent intent = new Intent(this, MainActivity.class);
+            this.startActivity(intent);
+            this.finishAffinity();
+
             if (resultCode == 1) {
-
-                Boolean networkState = haveNetworkConnection();
-                if (networkState == true){
-
-                    Toast.makeText(this, R.string.info_wifistatetrue, Toast.LENGTH_LONG);
-                } else {
-                    Toast.makeText(this, R.string.info_wifistatetrue, Toast.LENGTH_LONG);
-                }
-
+                onStart();
             } else {
                 finish();
             }
-        } else {
-            finish();
         }
     }
 
-    private boolean haveNetworkConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
+    //TODO - TEST - Wifi aç telefonda test edilecek.
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        registerReceiver(wifiStateReceiver, intentFilter);
+    }
 
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
+    private BroadcastReceiver wifiStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int wifiStateExtra = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
+
+            switch (wifiStateExtra) {
+                case WifiManager.WIFI_STATE_ENABLED:
+                    break;
+                case WifiManager.WIFI_STATE_DISABLED:
+                    break;
+            }
         }
-        return haveConnectedWifi || haveConnectedMobile;
+    };
+
+    public void login(TwitterSession session) {
+        String username = session.getUserName();
+        Intent intent = new Intent(this, Homepage.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
     }
 }

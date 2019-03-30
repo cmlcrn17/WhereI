@@ -11,6 +11,11 @@
     <string name="text_YourLocationNotFound">Your location not found.</string>
     <string name="btn_message">Message</string>
     <string name="btn_whereamI">Where am I?</string>
-    <string name="info_wifistatetrue">Internet connection is true.</string>
-    <string name="info_wifistatefalse">Internet connection is false.</string>
+    <string name="info_networkstatetrue">Internet connection is true.</string>
+    <string name="info_networkstatefalse">Internet connection is false.</string>
+
+    <!-- Twitter -->
+    <string name="com.twitter.sdk.android.CONSUMER_KEY"></string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET"></string>
+
 </resources>

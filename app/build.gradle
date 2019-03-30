@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+//apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 28
@@ -18,6 +19,7 @@ android {
     }
 }
 
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     //noinspection GradleCompatible
@@ -27,6 +29,13 @@ dependencies {
 
     //Maps Api
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
+
+    //Twitter Api
+    compile('com.twitter.sdk.android:twitter:3.1.0') {
+        transitive = true
+    }
+    compile 'com.twitter.sdk.android:twitter-core:3.1.0'
+
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
