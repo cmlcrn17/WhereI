@@ -12,11 +12,8 @@
     <string name="btn_whereamI">Neredeyim?</string>
     <string name="info_networkstatetrue">Internet bağlantısı sağlandı.</string>
     <string name="info_networkstatefalse">Internet bağlantısı sağlanamadı.</string>
-
-    <!-- Twitter -->
-    <string name="com.twitter.sdk.android.CONSUMER_KEY"></string>
-    <string name="com.twitter.sdk.android.CONSUMER_SECRET"></string>
-
+    <string name="dialog_msg_waiting">Konum aranıyor.</string>
+    <string name="msg_myLocationIs">Benim lokasyonum </string>
 </resources>
 
 

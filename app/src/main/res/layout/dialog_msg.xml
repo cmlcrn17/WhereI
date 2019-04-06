@@ -2,15 +2,16 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="250dp"
+    android:layout_height="250dp">
 
     <TextView
         android:id="@+id/txt_view"
         android:layout_width="283dp"
         android:layout_height="115dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="132dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="8dp"
+        android:padding="40dp"
         android:text="..."
         android:textAlignment="center"
         android:textSize="14sp"
@@ -18,24 +19,24 @@
         android:typeface="normal"
         app:layout_constraintBottom_toTopOf="@+id/btn_contact"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
-    <Button
+    <!--<Button
         android:id="@+id/btn_whts"
         style="@style/style_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="11dp"
-        android:layout_marginStart="3dp"
+        android:layout_marginStart="48dp"
         android:onClick="btn_whts"
         android:text="WhatsApp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/btn_twt"
-        app:layout_constraintEnd_toStartOf="@+id/btn_twt"
         app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="367dp" />-->
 
-   <!-- <Button
+    <!-- <Button
         android:id="@+id/btn_twt"
         style="@style/style_btn"
         android:layout_width="wrap_content"
@@ -48,7 +49,7 @@
         app:layout_constraintEnd_toStartOf="@+id/btn_contact"
         app:layout_constraintStart_toEndOf="@+id/btn_whts" />-->
 
-    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+    <!--<com.twitter.sdk.android.core.identity.TwitterLoginButton
         android:id="@+id/btn_twt"
         style="@style/style_btn"
         android:layout_width="wrap_content"
@@ -59,16 +60,20 @@
         android:text="Twitter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_contact"
-        app:layout_constraintStart_toEndOf="@+id/btn_whts" />
+        app:layout_constraintStart_toEndOf="@+id/btn_whts" />-->
 
     <Button
         android:id="@+id/btn_contact"
         style="@style/style_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:onClick="btn_contact"
         android:text="@string/btn_message"
-        app:layout_constraintBaseline_toBaselineOf="@+id/btn_twt"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btn_twt" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
 </android.support.constraint.ConstraintLayout>

@@ -13,9 +13,6 @@
     <string name="btn_whereamI">Where am I?</string>
     <string name="info_networkstatetrue">Internet connection is true.</string>
     <string name="info_networkstatefalse">Internet connection is false.</string>
-
-    <!-- Twitter -->
-    <string name="com.twitter.sdk.android.CONSUMER_KEY"></string>
-    <string name="com.twitter.sdk.android.CONSUMER_SECRET"></string>
-
+    <string name="dialog_msg_waiting">Waiting for your location.</string>
+    <string name="msg_myLocationIs">My location is </string>
 </resources>

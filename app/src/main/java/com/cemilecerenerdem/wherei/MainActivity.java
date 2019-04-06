@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,14 +34,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthToken;
-import com.twitter.sdk.android.core.TwitterCore;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.io.IOException;
 import java.util.List;
@@ -55,6 +49,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public static LocationListener locationListener;
     private WifiManager wifiManager;
     LatLng userLocation;
+    ProgressDialog dialog;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("WrongConstant")
@@ -74,26 +69,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         Boolean isInternet = isInternet();
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        TwitterLoginButton btnTwt = (TwitterLoginButton) findViewById(R.id.btn_twt);
 
-
-        Callback twitterCallback = new Callback<TwitterSession>() {
-            @Override
-            public void success(Result<TwitterSession> result) {
-                TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
-                TwitterAuthToken authToken = session.getAuthToken();
-                String token = authToken.token;
-                String secret = authToken.secret;
-
-                login(session);
-            }
-
-            @Override
-            public void failure(TwitterException exception) {
-
-            }
-        };
-        //btnTwt.setCallback(twitterCallback);
+        dialog = new ProgressDialog(this);
+        dialog.setMessage(getString(R.string.dialog_msg_waiting));
+        dialog.setCancelable(false);
+        dialog.setInverseBackgroundForced(false);
+        dialog.show();
 
         if (isInternet == true) {
             mapFragment.getMapAsync(this);
@@ -132,9 +113,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.clear();
 
                 userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                dialog.hide();
                 mMap.addMarker(new MarkerOptions().position(userLocation).title(getString(R.string.mapIcons_text)));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
-
             }
 
             @Override
@@ -153,23 +134,23 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             }
         };
 
-        //Get Permission
+        //region Permission
         if (Build.VERSION.SDK_INT >= 23) {
-
-            //TODO: 4- İzin verdikten sonra tekrar uygulamayı açmam gerekiyor. Bu kod akışı araştırılacak.
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 2);
+                onActivityResult(2, 1, null);
             } else {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 0, locationListener);
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60000, 1000, locationListener);
             }
-
         } else {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 0, locationListener);
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 60000, 1000, locationListener);
         }
+        //endregion
     }
 
+    //region Share Me Location
     public void ShareMeLocation(View v) {
 
         if (isInternet() == true) {
@@ -182,7 +163,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
                 if (userLocation.latitude != 0 && userLocation.longitude != 0) {
 
-                    //TODO: 20 - Mahalle, Sokak, Kapı no bilgisi düzgün şekilde yazdırılacak.
                     //Test Location -> 40.718732, 29.794408
                     Geocoder geocoder;
                     List<Address> addresses = null;
@@ -204,83 +184,19 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     String postalCode = addresses.get(0).getPostalCode();
                     String knownName = addresses.get(0).getFeatureName();
 
-                    //Write Lat, Long
-                    //final String location = "Latidude: " + userLocation.latitude + " - Longitude: " + userLocation.longitude;
-                    //info.setText(location);
-
                     info.setText(address.toString());
 
-                    Button whatsApp = (Button) dialog.findViewById(R.id.btn_whts);
-                    Button twitter = (Button) dialog.findViewById(R.id.btn_twt);
                     Button contact = (Button) dialog.findViewById(R.id.btn_contact);
-
-                    //WhatsApp
-                    whatsApp.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                            //TODO 19- WhatsApp olan android telefonda test edilecek.
-                            if (isInternet() == true) {
-                                //TODO: 6- WhatsApp kişi listesi açılacak.
-                            } else {
-                                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
-                                alertBuilder.setView(R.layout.dialog_warning);
-                                alertBuilder.setCancelable(false);
-                                alertBuilder.setPositiveButton(R.string.dialog_PositiveButton_OpenInternet, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        onActivityResult(1, 1, null);
-                                    }
-                                });
-                                alertBuilder.setNegativeButton(R.string.dialog_NegativeButton_CloseApp, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        onActivityResult(0, 0, null);
-                                    }
-                                });
-
-                                alertBuilder.create().show();
-                            }
-                        }
-                    });
-
-                    //Twitter
-                    twitter.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (isInternet() == true) {
-                                //TODO: 15- Twitterda paylaş yapılacak.
-                            } else {
-                                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
-                                alertBuilder.setView(R.layout.dialog_warning);
-                                alertBuilder.setCancelable(false);
-                                alertBuilder.setPositiveButton(R.string.dialog_PositiveButton_OpenInternet, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        onActivityResult(1, 1, null);
-                                    }
-                                });
-                                alertBuilder.setNegativeButton(R.string.dialog_NegativeButton_CloseApp, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        onActivityResult(0, 0, null);
-                                    }
-                                });
-
-                                alertBuilder.create().show();
-                            }
-                        }
-                    });
 
                     //Contact Guide
                     contact.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            //TODO: TEST - Mesaj gönderilerek test edilecek.
+
                             if (isInternet() == true) {
                                 Intent sendIntent = new Intent();
                                 sendIntent.setAction(Intent.ACTION_SEND);
-                                sendIntent.putExtra(Intent.EXTRA_TEXT, "My location is " + address.toString());
+                                sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_myLocationIs) + address.toString());
                                 sendIntent.setType("text/plain");
                                 startActivity(sendIntent);
                             } else {
@@ -335,9 +251,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             alertBuilder.create().show();
         }
     }
+    //endregion
 
     public boolean isInternet() {
-
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager.getActiveNetworkInfo() != null) {
             connectivityManager.getActiveNetworkInfo().isConnected();
@@ -353,25 +269,26 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Comment
         // requestCode, resultCode 1: Open Internet
+        // requestCode 2: Permission Location is true
 
         if (requestCode == 1) { //Open Internet
-
-            Intent intent = new Intent(this, MainActivity.class);
-            this.startActivity(intent);
-            this.finishAffinity();
+            dialog.hide();
 
             if (resultCode == 1) {
-                onStart();
+                WifionStart();
             } else {
                 finish();
+            }
+        } else if (requestCode == 2) {
+            if (resultCode == 1) {
+                refreshApp();
             }
         }
     }
 
-    //TODO - TEST - Wifi aç telefonda test edilecek.
-    @Override
-    protected void onStart() {
-        super.onStart();
+    protected void WifionStart() {
+        dialog.setMessage(getString(R.string.dialog_msg_waiting));
+        dialog.show();
         IntentFilter intentFilter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
         registerReceiver(wifiStateReceiver, intentFilter);
     }
@@ -379,21 +296,24 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private BroadcastReceiver wifiStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int wifiStateExtra = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
-
-            switch (wifiStateExtra) {
-                case WifiManager.WIFI_STATE_ENABLED:
-                    break;
-                case WifiManager.WIFI_STATE_DISABLED:
-                    break;
-            }
+            WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            wifi.setWifiEnabled(true);
+            dialog.hide();
+            refreshApp();
         }
     };
 
-    public void login(TwitterSession session) {
-        String username = session.getUserName();
-        Intent intent = new Intent(this, Homepage.class);
-        intent.putExtra("username", username);
-        startActivity(intent);
+    public void refreshApp() {
+
+        try {
+            Thread.sleep(4000);
+            Intent intents = getApplication().getBaseContext().getPackageManager().getLaunchIntentForPackage(getApplication().getBaseContext().getPackageName());
+            intents.setFlags(intents.FLAG_ACTIVITY_NEW_TASK | intents.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intents);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
