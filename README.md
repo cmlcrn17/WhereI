@@ -20,5 +20,5 @@ Uygulama açıldığında main act. içerisinde harita geliyor ve izin isteniyor
 ![MainActivity](https://github.com/cmlcrn17/WhereI/blob/master/images/mainAct.jpg)
 
 ## Address of the User Screenshot - Adres Yazdırma Ekran Görüntüsü
-![Write Address - Adres Yazdır](https://github.com/cmlcrn17/WhereI/blob/master/images/address_text.jpg)
+![Write Address - Adres Yazdır](https://github.com/cmlcrn17/WhereI/blob/master/images/showlocationtext.jpg)
 
