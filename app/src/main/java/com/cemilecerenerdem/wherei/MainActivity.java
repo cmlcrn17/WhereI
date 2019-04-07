@@ -34,7 +34,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.twitter.sdk.android.core.Twitter;
 
 import java.io.IOException;
 import java.util.List;
@@ -56,7 +55,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Twitter.initialize(this);
         setContentView(R.layout.activity_main);
 
         String isLang = Locale.getDefault().getLanguage();
@@ -112,8 +110,13 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
                 mMap.clear();
 
+                //Double latitude = Double.parseDouble("40.718732");
+                //Double longitude = Double.parseDouble("29.794408");
+
                 userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                //userLocation = new LatLng(latitude, longitude);
                 dialog.hide();
+
                 mMap.addMarker(new MarkerOptions().position(userLocation).title(getString(R.string.mapIcons_text)));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
             }
@@ -173,6 +176,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
                     try {
                         addresses = geocoder.getFromLocation(userLocation.latitude, userLocation.longitude, 1);
+                        //addresses = geocoder.getFromLocation(latitude, longitude, 1);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -193,10 +197,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         @Override
                         public void onClick(View view) {
 
+                            String ekMetin = getString(R.string.msg_myLocationIs);
                             if (isInternet() == true) {
                                 Intent sendIntent = new Intent();
                                 sendIntent.setAction(Intent.ACTION_SEND);
-                                sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.msg_myLocationIs) + address.toString());
+                                sendIntent.putExtra(Intent.EXTRA_TEXT, ekMetin + address.toString());
                                 sendIntent.setType("text/plain");
                                 startActivity(sendIntent);
                             } else {

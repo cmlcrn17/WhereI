@@ -7,8 +7,8 @@ android {
         applicationId "com.cemilecerenerdem.wherei"
         minSdkVersion 24
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 5
+        versionName "5.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -29,13 +29,6 @@ dependencies {
 
     //Maps Api
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
-
-    //Twitter Api
-    compile('com.twitter.sdk.android:twitter:3.1.0') {
-        transitive = true
-    }
-    compile 'com.twitter.sdk.android:twitter-core:3.1.0'
-
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
