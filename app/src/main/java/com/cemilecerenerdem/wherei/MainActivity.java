@@ -27,6 +27,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -181,51 +182,58 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                         e.printStackTrace();
                     }
 
-                    final String address = addresses.get(0).getAddressLine(0);
-                    String city = addresses.get(0).getLocality();
-                    String state = addresses.get(0).getAdminArea();
-                    String country = addresses.get(0).getCountryName();
-                    String postalCode = addresses.get(0).getPostalCode();
-                    String knownName = addresses.get(0).getFeatureName();
+                    int co = addresses.size();
+                    if (co == 0) {
 
-                    info.setText(address.toString());
+                        Toast.makeText(this, "Error!", Toast.LENGTH_LONG);
 
-                    Button contact = (Button) dialog.findViewById(R.id.btn_contact);
+                    } else {
+                        final String address = addresses.get(0).getAddressLine(0);
+                        String city = addresses.get(0).getLocality();
+                        String state = addresses.get(0).getAdminArea();
+                        String country = addresses.get(0).getCountryName();
+                        String postalCode = addresses.get(0).getPostalCode();
+                        String knownName = addresses.get(0).getFeatureName();
 
-                    //Contact Guide
-                    contact.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                        info.setText(address.toString());
 
-                            String ekMetin = getString(R.string.msg_myLocationIs);
-                            if (isInternet() == true) {
-                                Intent sendIntent = new Intent();
-                                sendIntent.setAction(Intent.ACTION_SEND);
-                                sendIntent.putExtra(Intent.EXTRA_TEXT, ekMetin + address.toString());
-                                sendIntent.setType("text/plain");
-                                startActivity(sendIntent);
-                            } else {
-                                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
-                                alertBuilder.setView(R.layout.dialog_warning);
-                                alertBuilder.setCancelable(false);
-                                alertBuilder.setPositiveButton(R.string.dialog_PositiveButton_OpenInternet, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        onActivityResult(1, 1, null);
-                                    }
-                                });
-                                alertBuilder.setNegativeButton(R.string.dialog_NegativeButton_CloseApp, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        onActivityResult(0, 0, null);
-                                    }
-                                });
+                        Button contact = (Button) dialog.findViewById(R.id.btn_contact);
 
-                                alertBuilder.create().show();
+                        //Contact Guide
+                        contact.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                String ekMetin = getString(R.string.msg_myLocationIs);
+                                if (isInternet() == true) {
+                                    Intent sendIntent = new Intent();
+                                    sendIntent.setAction(Intent.ACTION_SEND);
+                                    sendIntent.putExtra(Intent.EXTRA_TEXT, ekMetin + address.toString());
+                                    sendIntent.setType("text/plain");
+                                    startActivity(sendIntent);
+                                } else {
+                                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+                                    alertBuilder.setView(R.layout.dialog_warning);
+                                    alertBuilder.setCancelable(false);
+                                    alertBuilder.setPositiveButton(R.string.dialog_PositiveButton_OpenInternet, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            onActivityResult(1, 1, null);
+                                        }
+                                    });
+                                    alertBuilder.setNegativeButton(R.string.dialog_NegativeButton_CloseApp, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            onActivityResult(0, 0, null);
+                                        }
+                                    });
+
+                                    alertBuilder.create().show();
+                                }
                             }
-                        }
-                    });
+                        });
 
+                    }
                 } else {
                     info.setText(getString(R.string.text_YourLocationNotFound));
                 }
